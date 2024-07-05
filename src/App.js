@@ -11,6 +11,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PesquisarDiagnosticos from "./components/PesquisarDiagnosticos";
 import PesquisarMedicos from "./components/PesquisarMedicos";
 import AgendarConsulta from "./components/AgendarConsulta";
+import Diagnostico from "./components/Diagnostico";
+import Medico from "./components/Medico";
+import Consulta from "./components/Consulta";
+import PesquisarConsulta from "./components/PesquisarConsulta";
 
 const App = () => {
   return (
@@ -32,6 +36,10 @@ const App = () => {
         />
         <Route path="/pesquisar-medicos" element={<PesquisarMedicos />} />
         <Route path="/agendar-consulta" element={<AgendarConsulta />} />
+        <Route path="/pesquisar-consulta" element={<PesquisarConsulta />} />
+        <Route path="/diagnostico" element={<Diagnostico />} />
+        <Route path="/medico" element={<Medico />} />
+        <Route path="/consulta" element={<Consulta />} />
       </Routes>
     </Router>
   );
