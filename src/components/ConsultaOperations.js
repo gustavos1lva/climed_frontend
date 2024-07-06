@@ -6,18 +6,34 @@ const ConsultaOperations = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [consultaData, setConsultaData] = useState({
-    nomePaciente: "",
-    telefonePaciente: "",
-    date: "",
-    crm: "",
-    idEsp: "",
-    horaInicioCon: "",
-    idConsulta: "",
+    idCon: "",
+    medico: {
+      crm: "",
+      nomeMedico: "",
+      telefoneMedico: "",
+      percentual: "",
+    },
+    especialidade: {
+      idEsp: "",
+      nomeEsp: "",
+      indice: "",
+    },
+    paciente: {
+      idPac: "",
+      cpf: "",
+      nomePac: "",
+      telefonePac: "",
+      endereco: "",
+      idade: "",
+      sexo: "",
+    },
+    data: "",
+    horaInicCon: "",
     horaFimCon: "",
     pagou: false,
     valorPago: "",
-    idDiagnostico: "",
     formaPagamento: "",
+    diagnostico: null,
   });
   const [error, setError] = useState("");
   const [operation, setOperation] = useState("");
@@ -35,11 +51,11 @@ const ConsultaOperations = () => {
       switch (operation) {
         case "searchEspecialidade":
           endpoint = "consulta/especialidade";
-          queryParams = `date=${consultaData.date}&especialidade=${searchQuery}`;
+          queryParams = `date=${consultaData.data}&especialidade=${searchQuery}`;
           break;
         case "searchMedico":
           endpoint = "consulta/medico";
-          queryParams = `date=${consultaData.date}&especialidade=${consultaData.idEsp}&medico=${searchQuery}`;
+          queryParams = `date=${consultaData.data}&especialidade=${consultaData.especialidade.idEsp}&medico=${searchQuery}`;
           break;
         default:
           setError("Operação de pesquisa inválida");
@@ -47,9 +63,13 @@ const ConsultaOperations = () => {
       }
 
       const response = await fetch(
-        `http://localhost:8080/consulta/${endpoint}?${queryParams}`,
+        `http://localhost:8080/${endpoint}?${queryParams}`,
         {
           method: "GET",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
 
@@ -60,7 +80,8 @@ const ConsultaOperations = () => {
       } else {
         navigate("/consulta", { state: { consultaData: data } });
       }
-    } catch (error) {
+    } catch (erro) {
+      console.log(erro);
       setError("Erro no servidor");
     }
   };
@@ -95,20 +116,35 @@ const ConsultaOperations = () => {
             operation === "create" ? "criada" : "atualizada"
           } com sucesso`
         );
-        // Limpar os dados do formulário após o sucesso
         setConsultaData({
-          nomePaciente: "",
-          telefonePaciente: "",
-          date: "",
-          crm: "",
-          idEsp: "",
-          horaInicioCon: "",
-          idConsulta: "",
+          idCon: "",
+          medico: {
+            crm: "",
+            nomeMedico: "",
+            telefoneMedico: "",
+            percentual: "",
+          },
+          especialidade: {
+            idEsp: "",
+            nomeEsp: "",
+            indice: "",
+          },
+          paciente: {
+            idPac: "",
+            cpf: "",
+            nomePac: "",
+            telefonePac: "",
+            endereco: "",
+            idade: "",
+            sexo: "",
+          },
+          data: "",
+          horaInicCon: "",
           horaFimCon: "",
           pagou: false,
           valorPago: "",
-          idDiagnostico: "",
           formaPagamento: "",
+          diagnostico: null,
         });
       }
     } catch (error) {
@@ -122,13 +158,13 @@ const ConsultaOperations = () => {
         return (
           <form onSubmit={handleSearch} className="form">
             <div className="form-group">
-              <label htmlFor="consultaData.date">Data:</label>
+              <label htmlFor="consultaData.data">Data:</label>
               <input
                 type="date"
-                id="consultaData.date"
-                value={consultaData.date}
+                id="consultaData.data"
+                value={consultaData.data}
                 onChange={(e) =>
-                  setConsultaData({ ...consultaData, date: e.target.value })
+                  setConsultaData({ ...consultaData, data: e.target.value })
                 }
                 required
                 className="form-input"
@@ -154,26 +190,34 @@ const ConsultaOperations = () => {
         return (
           <form onSubmit={handleSearch} className="form">
             <div className="form-group">
-              <label htmlFor="consultaData.date">Data:</label>
+              <label htmlFor="consultaData.data">Data:</label>
               <input
                 type="date"
-                id="consultaData.date"
-                value={consultaData.date}
+                id="consultaData.data"
+                value={consultaData.data}
                 onChange={(e) =>
-                  setConsultaData({ ...consultaData, date: e.target.value })
+                  setConsultaData({ ...consultaData, data: e.target.value })
                 }
                 required
                 className="form-input"
               />
             </div>
             <div className="form-group">
-              <label htmlFor="consultaData.idEsp">Especialidade:</label>
+              <label htmlFor="consultaData.especialidade.idEsp">
+                Especialidade:
+              </label>
               <input
                 type="text"
-                id="consultaData.idEsp"
-                value={consultaData.idEsp}
+                id="consultaData.especialidade.idEsp"
+                value={consultaData.especialidade.idEsp}
                 onChange={(e) =>
-                  setConsultaData({ ...consultaData, idEsp: e.target.value })
+                  setConsultaData({
+                    ...consultaData,
+                    especialidade: {
+                      ...consultaData.especialidade,
+                      idEsp: e.target.value,
+                    },
+                  })
                 }
                 required
                 className="form-input"
@@ -200,15 +244,18 @@ const ConsultaOperations = () => {
         return (
           <form onSubmit={handleCreateOrUpdate} className="form">
             <div className="form-group">
-              <label htmlFor="nomePaciente">Nome do Paciente:</label>
+              <label htmlFor="nomePac">Nome do Paciente:</label>
               <input
                 type="text"
-                id="nomePaciente"
-                value={consultaData.nomePaciente}
+                id="nomePac"
+                value={consultaData.paciente.nomePac}
                 onChange={(e) =>
                   setConsultaData({
                     ...consultaData,
-                    nomePaciente: e.target.value,
+                    paciente: {
+                      ...consultaData.paciente,
+                      nomePac: e.target.value,
+                    },
                   })
                 }
                 required
@@ -216,15 +263,18 @@ const ConsultaOperations = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="telefonePaciente">Telefone do Paciente:</label>
+              <label htmlFor="telefonePac">Telefone do Paciente:</label>
               <input
                 type="text"
-                id="telefonePaciente"
-                value={consultaData.telefonePaciente}
+                id="telefonePac"
+                value={consultaData.paciente.telefonePac}
                 onChange={(e) =>
                   setConsultaData({
                     ...consultaData,
-                    telefonePaciente: e.target.value,
+                    paciente: {
+                      ...consultaData.paciente,
+                      telefonePac: e.target.value,
+                    },
                   })
                 }
                 required
@@ -232,13 +282,13 @@ const ConsultaOperations = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="date">Data:</label>
+              <label htmlFor="data">Data:</label>
               <input
                 type="date"
-                id="date"
-                value={consultaData.date}
+                id="data"
+                value={consultaData.data}
                 onChange={(e) =>
-                  setConsultaData({ ...consultaData, date: e.target.value })
+                  setConsultaData({ ...consultaData, data: e.target.value })
                 }
                 required
                 className="form-input"
@@ -249,9 +299,12 @@ const ConsultaOperations = () => {
               <input
                 type="text"
                 id="crm"
-                value={consultaData.crm}
+                value={consultaData.medico.crm}
                 onChange={(e) =>
-                  setConsultaData({ ...consultaData, crm: e.target.value })
+                  setConsultaData({
+                    ...consultaData,
+                    medico: { ...consultaData.medico, crm: e.target.value },
+                  })
                 }
                 required
                 className="form-input"
@@ -262,24 +315,14 @@ const ConsultaOperations = () => {
               <input
                 type="text"
                 id="idEsp"
-                value={consultaData.idEsp}
-                onChange={(e) =>
-                  setConsultaData({ ...consultaData, idEsp: e.target.value })
-                }
-                required
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="horaInicioCon">Hora de Início:</label>
-              <input
-                type="text"
-                id="horaInicioCon"
-                value={consultaData.horaInicioCon}
+                value={consultaData.especialidade.idEsp}
                 onChange={(e) =>
                   setConsultaData({
                     ...consultaData,
-                    horaInicioCon: e.target.value,
+                    especialidade: {
+                      ...consultaData.especialidade,
+                      idEsp: e.target.value,
+                    },
                   })
                 }
                 required
@@ -287,15 +330,31 @@ const ConsultaOperations = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="idConsulta">ID da Consulta:</label>
+              <label htmlFor="horaInicCon">Hora de Início:</label>
               <input
                 type="text"
-                id="idConsulta"
-                value={consultaData.idConsulta}
+                id="horaInicCon"
+                value={consultaData.horaInicCon}
                 onChange={(e) =>
                   setConsultaData({
                     ...consultaData,
-                    idConsulta: e.target.value,
+                    horaInicCon: e.target.value,
+                  })
+                }
+                required
+                className="form-input"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="idCon">ID da Consulta:</label>
+              <input
+                type="text"
+                id="idCon"
+                value={consultaData.idCon}
+                onChange={(e) =>
+                  setConsultaData({
+                    ...consultaData,
+                    idCon: e.target.value,
                   })
                 }
                 className="form-input"
@@ -338,21 +397,6 @@ const ConsultaOperations = () => {
                   setConsultaData({
                     ...consultaData,
                     valorPago: e.target.value,
-                  })
-                }
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="idDiagnostico">ID do Diagnóstico:</label>
-              <input
-                type="text"
-                id="idDiagnostico"
-                value={consultaData.idDiagnostico}
-                onChange={(e) =>
-                  setConsultaData({
-                    ...consultaData,
-                    idDiagnostico: e.target.value,
                   })
                 }
                 className="form-input"

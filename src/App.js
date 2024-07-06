@@ -10,6 +10,7 @@ import PesquisarEspecialidade from "./components/PesquisarEspecialidade";
 import PesquisarMedicos from "./components/PesquisarMedicos";
 import Especialidade from "./components/Especialidade";
 import ConsultaOperations from "./components/ConsultaOperations";
+import Consulta from "./components/Consulta";
 import PacienteOperations from "./components/PacienteOperations"; // Importa o componente PacienteOperations
 
 const App = () => {
@@ -27,8 +28,8 @@ const App = () => {
           path="/paciente-operations"
           element={<PacienteOperations />}
         />{" "}
-        {/* Adiciona a rota para PacienteOperations */}
         <Route path="/especialidade" element={<Especialidade />} />
+        <Route path="/consulta" element={<Consulta />} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </Router>
