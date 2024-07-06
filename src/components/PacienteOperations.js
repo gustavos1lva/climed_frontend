@@ -23,27 +23,30 @@ const PacienteOperations = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    // Implementar a lógica de busca aqui
+
     try {
-      // Exemplo de busca mockada
-      navigate("/paciente", {
-        state: {
-          pacienteData: [
-            {
-              IdPac: 1,
-              CPF: "123.456.789-00",
-              NomeP: "Fulano de Tal",
-              TelefonePac: "(99) 99999-9999",
-              Endereco: "Rua Exemplo, 123",
-              Idade: 35,
-              Sexo: "Masculino",
-            },
-            // Adicionar mais pacientes conforme necessário
-          ],
-        },
-      });
+      const response = await fetch(
+        `http://localhost:8080/paciente/buscarPorCpf`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cpf: pacienteData.CPF }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Algo deu errado");
+      } else {
+        navigate("/paciente", {
+          state: { pacienteData: Array.isArray(data) ? data : [data] },
+        });
+      }
     } catch (error) {
-      setError("Erro ao buscar paciente");
+      setError("Erro no servidor");
     }
   };
 
@@ -55,8 +58,8 @@ const PacienteOperations = () => {
     );
 
     try {
-      const response = await fetch("http://localhost:5000/api/paciente", {
-        method: "POST",
+      const response = await fetch("http://localhost:8080/paciente", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -69,7 +72,6 @@ const PacienteOperations = () => {
         setError(data.message || "Algo deu errado");
       } else {
         alert("Paciente cadastrado com sucesso");
-        // Limpar os dados do formulário após o sucesso
         setPacienteData({
           IdPac: "",
           CPF: "",

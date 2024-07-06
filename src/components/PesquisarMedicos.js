@@ -18,9 +18,9 @@ const PesquisarMedicos = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/pesquisa-medico/nome_especialidade`,
+        `http://localhost:8080/medico/nome_especialidade`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
@@ -49,16 +49,13 @@ const PesquisarMedicos = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/pesquisa-medico/nome`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ nome: nomeMedico }),
-        }
-      );
+      const response = await fetch(`http://localhost:8080/medico/nome`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nome: nomeMedico }),
+      });
 
       const data = await response.json();
 
@@ -79,9 +76,9 @@ const PesquisarMedicos = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/pesquisa-medico/especialidade`,
+        `http://localhost:8080/medico/especialidade`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },

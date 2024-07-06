@@ -34,11 +34,11 @@ const ConsultaOperations = () => {
 
       switch (operation) {
         case "searchEspecialidade":
-          endpoint = "especialidade";
+          endpoint = "consulta/especialidade";
           queryParams = `date=${consultaData.date}&especialidade=${searchQuery}`;
           break;
         case "searchMedico":
-          endpoint = "medico";
+          endpoint = "consulta/medico";
           queryParams = `date=${consultaData.date}&especialidade=${consultaData.idEsp}&medico=${searchQuery}`;
           break;
         default:
@@ -47,7 +47,7 @@ const ConsultaOperations = () => {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/consulta/${endpoint}?${queryParams}`,
+        `http://localhost:8080/consulta/${endpoint}?${queryParams}`,
         {
           method: "GET",
         }
@@ -69,6 +69,7 @@ const ConsultaOperations = () => {
     e.preventDefault();
     const endpoint = "consulta";
     const method = operation === "create" ? "POST" : "PUT";
+    const func = operation === "create" ? "/create" : "/update";
 
     // Filtra dados vazios
     const filteredData = Object.fromEntries(
@@ -76,7 +77,7 @@ const ConsultaOperations = () => {
     );
 
     try {
-      const response = await fetch(`http://localhost:5000/api/${endpoint}`, {
+      const response = await fetch(`http://localhost:8080/${endpoint + func}`, {
         method: method,
         headers: {
           "Content-Type": "application/json",

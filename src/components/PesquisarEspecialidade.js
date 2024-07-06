@@ -17,7 +17,7 @@ const PesquisarEspecialidade = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/especialidade/nome?nome=${searchQuery}`
+        `http://localhost:8080/especialidade/nome?nome=${searchQuery}`
       );
 
       const data = await response.json();
@@ -39,7 +39,7 @@ const PesquisarEspecialidade = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/especialidade?id=${searchQuery}`
+        `http://localhost:8080/especialidade/id/?id=${searchQuery}`
       );
 
       const data = await response.json();
