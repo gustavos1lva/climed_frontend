@@ -9,6 +9,28 @@ const PesquisarMedicos = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+
+    //mock pra teste da tela, apagar na versao final
+    // navigate("/medico", {
+    //   state: {
+    //     medicoData: [
+    //       {
+    //         CRM: "12345",
+    //         NomeM: "Dr. João Silva",
+    //         TelefoneM: "(11) 98765-4321",
+    //         Percentual: "70%",
+    //       },
+    //       {
+    //         CRM: "67890",
+    //         NomeM: "Dra. Maria Oliveira",
+    //         TelefoneM: "(21) 98765-4321",
+    //         Percentual: "80%",
+    //       },
+    //       // Adicione mais médicos conforme necessário
+    //     ],
+    //   },
+    // });
+
     try {
       const response = await fetch(
         "http://localhost:5000/api/pesquisa-medico",
@@ -26,7 +48,9 @@ const PesquisarMedicos = () => {
       if (!response.ok) {
         setError(data.message || "Algo deu errado");
       } else {
-        navigate("/medico");
+        navigate("/medico", {
+          state: { medicoData: Array.isArray(data) ? data : [data] },
+        });
       }
     } catch (error) {
       setError("Erro no servidor");
@@ -52,6 +76,7 @@ const PesquisarMedicos = () => {
           Pesquisar
         </button>
       </form>
+      {error && <div className="error">{error}</div>}
     </div>
   );
 };

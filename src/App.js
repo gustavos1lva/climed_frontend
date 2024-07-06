@@ -5,7 +5,6 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import Login from "./components/Login";
 import Home from "./components/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PesquisarDiagnosticos from "./components/PesquisarDiagnosticos";
@@ -20,7 +19,6 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
         <Route
           path="/home"
           element={
@@ -29,7 +27,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/home" />} />
         <Route
           path="/pesquisar-diagnostico"
           element={<PesquisarDiagnosticos />}
