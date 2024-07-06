@@ -6,38 +6,30 @@ import {
   Navigate,
 } from "react-router-dom";
 import Home from "./components/Home";
-import ProtectedRoute from "./components/ProtectedRoute";
-import PesquisarDiagnosticos from "./components/PesquisarDiagnosticos";
+import PesquisarEspecialidade from "./components/PesquisarEspecialidade";
 import PesquisarMedicos from "./components/PesquisarMedicos";
-import AgendarConsulta from "./components/AgendarConsulta";
-import Diagnostico from "./components/Diagnostico";
-import Medico from "./components/Medico";
-import Consulta from "./components/Consulta";
-import PesquisarConsulta from "./components/PesquisarConsulta";
+import Especialidade from "./components/Especialidade";
+import ConsultaOperations from "./components/ConsultaOperations";
+import PacienteOperations from "./components/PacienteOperations"; // Importa o componente PacienteOperations
 
 const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/home" element={<Home />} />
         <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to="/home" />} />
-        <Route
-          path="/pesquisar-diagnostico"
-          element={<PesquisarDiagnosticos />}
+          path="/pesquisar-especialidade"
+          element={<PesquisarEspecialidade />}
         />
         <Route path="/pesquisar-medicos" element={<PesquisarMedicos />} />
-        <Route path="/agendar-consulta" element={<AgendarConsulta />} />
-        <Route path="/pesquisar-consulta" element={<PesquisarConsulta />} />
-        <Route path="/diagnostico" element={<Diagnostico />} />
-        <Route path="/medico" element={<Medico />} />
-        <Route path="/consulta" element={<Consulta />} />
+        <Route path="/consulta-operations" element={<ConsultaOperations />} />
+        <Route
+          path="/paciente-operations"
+          element={<PacienteOperations />}
+        />{" "}
+        {/* Adiciona a rota para PacienteOperations */}
+        <Route path="/especialidade" element={<Especialidade />} />
+        <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </Router>
   );
