@@ -13,6 +13,7 @@ import ConsultaOperations from "./components/ConsultaOperations";
 import Consulta from "./components/Consulta";
 import PacienteOperations from "./components/PacienteOperations"; // Importa o componente PacienteOperations
 import Medico from "./components/Medico";
+import Paciente from "./components/Paciente";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
           element={<PacienteOperations />}
         />{" "}
         <Route path="/especialidade" element={<Especialidade />} />
+        <Route path="/paciente" element={<Paciente />} />
         <Route path="/consulta" element={<Consulta />} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>

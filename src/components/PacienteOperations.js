@@ -26,13 +26,12 @@ const PacienteOperations = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/paciente/buscarPorcpf`,
+        `http://localhost:8080/paciente/buscarPorCpf?cpf=${searchQuery}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ cpf: pacienteData.cpf }),
         }
       );
 
@@ -42,7 +41,7 @@ const PacienteOperations = () => {
         setError(data.message || "Algo deu errado");
       } else {
         navigate("/paciente", {
-          state: { pacienteData: Array.isArray(data) ? data : [data] },
+          state: { pacienteData: data },
         });
       }
     } catch (error) {
@@ -81,9 +80,7 @@ const PacienteOperations = () => {
           sexo: "",
         });
       }
-    } catch (error) {
-      setError("Erro no servidor");
-    }
+    } catch (error) {}
   };
 
   const renderForm = () => {

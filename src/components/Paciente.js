@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./CommonStyles.css";
 
 const Paciente = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const pacienteData = location.state ? location.state.pacienteData : null;
+  const [pacienteData, setPacienteData] = useState(null);
+
+  useEffect(() => {
+    if (location.state && location.state.pacienteData) {
+      setPacienteData(location.state.pacienteData);
+    }
+  }, [location.state]);
 
   const handleBack = () => {
     navigate("/pesquisar-pacientes");
