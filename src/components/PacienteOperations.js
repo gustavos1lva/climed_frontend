@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./CommonStyles.css"; // Importa o arquivo de estilos comuns
+import "./CommonStyles.css";
 
 const PacienteOperations = () => {
   const navigate = useNavigate();
@@ -51,26 +51,25 @@ const PacienteOperations = () => {
 
   const handleCreateOrUpdate = async (e) => {
     e.preventDefault();
-    // Filtra dados vazios
     const filteredData = Object.fromEntries(
       Object.entries(pacienteData).filter(([_, v]) => v !== "")
     );
-
+  
     try {
       const response = await fetch("http://localhost:8080/paciente", {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(filteredData),
       });
-
-      const data = await response.json();
-
+  
       if (!response.ok) {
-        setError(data.message || "Algo deu errado");
+        const errorData = await response.json();
+        setError(errorData.message || "Algo deu errado");
       } else {
-        alert("Paciente salvo com sucesso");
+        const data = await response.text();
+        alert("Paciente salvo com sucesso. ID: " + data);
         setPacienteData({
           cpf: "",
           nomePac: "",
@@ -80,9 +79,11 @@ const PacienteOperations = () => {
           sexo: "",
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      setError("Erro no servidor");
+    }
   };
-
+  
   const renderForm = () => {
     if (operation === "search") {
       return (
