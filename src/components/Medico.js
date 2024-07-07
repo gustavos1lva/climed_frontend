@@ -18,19 +18,19 @@ const Medico = () => {
           <div key={index} className="diagnostico-item">
             <div className="diagnostico-detail">
               <label>CRM:</label>
-              <p>{medico.CRM}</p>
+              <p>{medico.crm}</p>
             </div>
             <div className="diagnostico-detail">
               <label>Nome:</label>
-              <p>{medico.NomeM}</p>
+              <p>{medico.nomeMedico}</p>
             </div>
             <div className="diagnostico-detail">
               <label>Telefone:</label>
-              <p>{medico.TelefoneM}</p>
+              <p>{medico.telefoneMedico}</p>
             </div>
             <div className="diagnostico-detail">
               <label>Percentual:</label>
-              <p>{medico.Percentual}</p>
+              <p>{medico.percentual}</p>
             </div>
           </div>
         ))}

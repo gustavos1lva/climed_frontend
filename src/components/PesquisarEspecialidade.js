@@ -25,8 +25,9 @@ const PesquisarEspecialidade = () => {
       if (!response.ok) {
         setError(data.message || "Algo deu errado");
       } else {
+        const formattedData = Object.values(data);
         navigate("/especialidade", {
-          state: { especialidadeData: Array.isArray(data) ? data : [data] },
+          state: { especialidadeData: formattedData },
         });
       }
     } catch (error) {
@@ -39,7 +40,7 @@ const PesquisarEspecialidade = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/especialidade/id/?id=${searchQuery}`
+        `http://localhost:8080/especialidade/id?id=${searchQuery}`
       );
 
       const data = await response.json();
@@ -48,7 +49,7 @@ const PesquisarEspecialidade = () => {
         setError(data.message || "Algo deu errado");
       } else {
         navigate("/especialidade", {
-          state: { especialidadeData: [data] },
+          state: { especialidadeData: [data] }, // Envia como um array de 1 item
         });
       }
     } catch (error) {

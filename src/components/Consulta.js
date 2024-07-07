@@ -18,43 +18,91 @@ const Consulta = () => {
           <div key={index} className="consulta-item">
             <div className="consulta-detail">
               <label>ID da Consulta:</label>
-              <p>{consulta.IdCon}</p>
+              <p>{consulta.idCon}</p>
             </div>
             <div className="consulta-detail">
               <label>CRM:</label>
-              <p>{consulta.CRM}</p>
+              <p>{consulta.medico.crm}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>Nome do Médico:</label>
+              <p>{consulta.medico.nomeMedico}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>Telefone do Médico:</label>
+              <p>{consulta.medico.telefoneMedico}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>Percentual:</label>
+              <p>{consulta.medico.percentual}</p>
             </div>
             <div className="consulta-detail">
               <label>ID do Especialista:</label>
-              <p>{consulta.IdEsp}</p>
+              <p>{consulta.especialidade.idEsp}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>Nome da Especialidade:</label>
+              <p>{consulta.especialidade.nomeEsp}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>Índice:</label>
+              <p>{consulta.especialidade.indice}</p>
             </div>
             <div className="consulta-detail">
               <label>ID do Paciente:</label>
-              <p>{consulta.IdPac}</p>
+              <p>{consulta.paciente.idPac}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>CPF:</label>
+              <p>{consulta.paciente.cpf}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>Nome do Paciente:</label>
+              <p>{consulta.paciente.nomePac}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>Telefone do Paciente:</label>
+              <p>{consulta.paciente.telefonePac}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>Endereço:</label>
+              <p>{consulta.paciente.endereco}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>Idade:</label>
+              <p>{consulta.paciente.idade}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>Sexo:</label>
+              <p>{consulta.paciente.sexo}</p>
             </div>
             <div className="consulta-detail">
               <label>Data da Consulta:</label>
-              <p>{consulta.Data}</p>
+              <p>{new Date(consulta.data).toLocaleDateString()}</p>
             </div>
             <div className="consulta-detail">
               <label>Hora Início da Consulta:</label>
-              <p>{consulta.HoraInicCon}</p>
+              <p>{new Date(consulta.horaInicCon).toLocaleTimeString()}</p>
             </div>
             <div className="consulta-detail">
               <label>Hora Fim da Consulta:</label>
-              <p>{consulta.HoraFimCon}</p>
+              <p>{new Date(consulta.horaFimCon).toLocaleTimeString()}</p>
             </div>
             <div className="consulta-detail">
               <label>Pagou:</label>
-              <p>{consulta.Pagou}</p>
+              <p>{consulta.pagou ? "Sim" : "Não"}</p>
             </div>
             <div className="consulta-detail">
               <label>Valor Pago:</label>
-              <p>{consulta.ValorPago}</p>
+              <p>{consulta.valorPago}</p>
             </div>
             <div className="consulta-detail">
               <label>Forma de Pagamento:</label>
-              <p>{consulta.FormaPagamento}</p>
+              <p>{consulta.formaPagamento}</p>
+            </div>
+            <div className="consulta-detail">
+              <label>Diagnóstico:</label>
+              <p>{consulta.diagnostico || "Não informado"}</p>
             </div>
           </div>
         ))}

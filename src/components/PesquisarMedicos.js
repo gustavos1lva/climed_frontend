@@ -18,16 +18,12 @@ const PesquisarMedicos = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/medico/nome_especialidade`,
+        `http://localhost:8080/medico/nome_especialidade?especialidade=${especialidade}&nome=${nomeMedico}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            nome: nomeMedico,
-            especialidade: especialidade,
-          }),
         }
       );
 
@@ -36,8 +32,9 @@ const PesquisarMedicos = () => {
       if (!response.ok) {
         setError(data.message || "Algo deu errado");
       } else {
+        const formattedData = Object.values(data);
         navigate("/medico", {
-          state: { medicoData: Array.isArray(data) ? data : [data] },
+          state: { medicoData: formattedData },
         });
       }
     } catch (error) {
@@ -49,21 +46,24 @@ const PesquisarMedicos = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:8080/medico/nome`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nome: nomeMedico }),
-      });
+      const response = await fetch(
+        `http://localhost:8080/medico/nome?nome=${nomeMedico}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
         setError(data.message || "Algo deu errado");
       } else {
+        const formattedData = Object.values(data);
         navigate("/medico", {
-          state: { medicoData: Array.isArray(data) ? data : [data] },
+          state: { medicoData: formattedData },
         });
       }
     } catch (error) {
@@ -76,13 +76,12 @@ const PesquisarMedicos = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/medico/especialidade`,
+        `http://localhost:8080/medico/especialidade?especialidade=${especialidade}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ especialidade: especialidade }),
         }
       );
 
@@ -91,8 +90,9 @@ const PesquisarMedicos = () => {
       if (!response.ok) {
         setError(data.message || "Algo deu errado");
       } else {
+        const formattedData = Object.values(data);
         navigate("/medico", {
-          state: { medicoData: Array.isArray(data) ? data : [data] },
+          state: { medicoData: formattedData },
         });
       }
     } catch (error) {

@@ -6,13 +6,13 @@ const PacienteOperations = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [pacienteData, setPacienteData] = useState({
-    IdPac: "",
-    CPF: "",
-    NomeP: "",
-    TelefonePac: "",
-    Endereco: "",
-    Idade: "",
-    Sexo: "",
+    idPac: "",
+    cpf: "",
+    nomePac: "",
+    telefonePac: "",
+    endereco: "",
+    idade: "",
+    sexo: "",
   });
   const [error, setError] = useState("");
   const [operation, setOperation] = useState("");
@@ -26,13 +26,13 @@ const PacienteOperations = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/paciente/buscarPorCpf`,
+        `http://localhost:8080/paciente/buscarPorcpf`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ cpf: pacienteData.CPF }),
+          body: JSON.stringify({ cpf: pacienteData.cpf }),
         }
       );
 
@@ -71,15 +71,14 @@ const PacienteOperations = () => {
       if (!response.ok) {
         setError(data.message || "Algo deu errado");
       } else {
-        alert("Paciente cadastrado com sucesso");
+        alert("Paciente salvo com sucesso");
         setPacienteData({
-          IdPac: "",
-          CPF: "",
-          NomeP: "",
-          TelefonePac: "",
-          Endereco: "",
-          Idade: "",
-          Sexo: "",
+          cpf: "",
+          nomePac: "",
+          telefonePac: "",
+          endereco: "",
+          idade: "",
+          sexo: "",
         });
       }
     } catch (error) {
@@ -92,7 +91,7 @@ const PacienteOperations = () => {
       return (
         <form onSubmit={handleSearch} className="form">
           <div className="form-group">
-            <label htmlFor="searchQuery">CPF do Paciente:</label>
+            <label htmlFor="searchQuery">cpf do Paciente:</label>
             <input
               type="text"
               id="searchQuery"
@@ -111,41 +110,41 @@ const PacienteOperations = () => {
       return (
         <form onSubmit={handleCreateOrUpdate} className="form">
           <div className="form-group">
-            <label htmlFor="CPF">CPF:</label>
+            <label htmlFor="cpf">cpf:</label>
             <input
               type="text"
-              id="CPF"
-              value={pacienteData.CPF}
+              id="cpf"
+              value={pacienteData.cpf}
               onChange={(e) =>
-                setPacienteData({ ...pacienteData, CPF: e.target.value })
+                setPacienteData({ ...pacienteData, cpf: e.target.value })
               }
               required
               className="form-input"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="NomeP">Nome:</label>
+            <label htmlFor="nomePac">Nome:</label>
             <input
               type="text"
-              id="NomeP"
-              value={pacienteData.NomeP}
+              id="nomePac"
+              value={pacienteData.nomePac}
               onChange={(e) =>
-                setPacienteData({ ...pacienteData, NomeP: e.target.value })
+                setPacienteData({ ...pacienteData, nomePac: e.target.value })
               }
               required
               className="form-input"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="TelefonePac">Telefone:</label>
+            <label htmlFor="telefonePac">Telefone:</label>
             <input
               type="text"
-              id="TelefonePac"
-              value={pacienteData.TelefonePac}
+              id="telefonePac"
+              value={pacienteData.telefonePac}
               onChange={(e) =>
                 setPacienteData({
                   ...pacienteData,
-                  TelefonePac: e.target.value,
+                  telefonePac: e.target.value,
                 })
               }
               required
@@ -153,38 +152,38 @@ const PacienteOperations = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="Sexo">Sexo:</label>
+            <label htmlFor="sexo">sexo:</label>
             <input
               type="text"
-              id="Sexo"
-              value={pacienteData.Sexo}
+              id="sexo"
+              value={pacienteData.sexo}
               onChange={(e) =>
-                setPacienteData({ ...pacienteData, Sexo: e.target.value })
+                setPacienteData({ ...pacienteData, sexo: e.target.value })
               }
               required
               className="form-input"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="Endereco">Endereço:</label>
+            <label htmlFor="endereco">Endereço:</label>
             <input
               type="text"
-              id="Endereco"
-              value={pacienteData.Endereco}
+              id="endereco"
+              value={pacienteData.endereco}
               onChange={(e) =>
-                setPacienteData({ ...pacienteData, Endereco: e.target.value })
+                setPacienteData({ ...pacienteData, endereco: e.target.value })
               }
               className="form-input"
             />
           </div>
           <div className="form-group">
-            <label htmlFor="Idade">Idade:</label>
+            <label htmlFor="idade">idade:</label>
             <input
               type="text"
-              id="Idade"
-              value={pacienteData.Idade}
+              id="idade"
+              value={pacienteData.idade}
               onChange={(e) =>
-                setPacienteData({ ...pacienteData, Idade: e.target.value })
+                setPacienteData({ ...pacienteData, idade: e.target.value })
               }
               className="form-input"
             />

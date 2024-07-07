@@ -12,6 +12,7 @@ import Especialidade from "./components/Especialidade";
 import ConsultaOperations from "./components/ConsultaOperations";
 import Consulta from "./components/Consulta";
 import PacienteOperations from "./components/PacienteOperations"; // Importa o componente PacienteOperations
+import Medico from "./components/Medico";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           element={<PesquisarEspecialidade />}
         />
         <Route path="/pesquisar-medicos" element={<PesquisarMedicos />} />
+        <Route path="/medico" element={<Medico />} />
         <Route path="/consulta-operations" element={<ConsultaOperations />} />
         <Route
           path="/paciente-operations"

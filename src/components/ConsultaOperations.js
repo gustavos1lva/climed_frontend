@@ -1,37 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./CommonStyles.css"; // Importa o arquivo de estilos comuns
+import "./CommonStyles.css";
 
 const ConsultaOperations = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [consultaData, setConsultaData] = useState({
-    idCon: "",
-    medico: {
-      crm: "",
-      nomeMedico: "",
-      telefoneMedico: "",
-      percentual: "",
-    },
-    especialidade: {
-      idEsp: "",
-      nomeEsp: "",
-      indice: "",
-    },
-    paciente: {
-      idPac: "",
-      cpf: "",
-      nomePac: "",
-      telefonePac: "",
-      endereco: "",
-      idade: "",
-      sexo: "",
-    },
+    idCon: null,
+    nomePaciente: "",
+    telefonePaciente: "",
     data: "",
+    crm: null,
+    idEsp: null,
     horaInicCon: "",
     horaFimCon: "",
     pagou: false,
-    valorPago: "",
+    valorPago: null,
     formaPagamento: "",
     diagnostico: null,
   });
@@ -55,7 +39,7 @@ const ConsultaOperations = () => {
           break;
         case "searchMedico":
           endpoint = "consulta/medico";
-          queryParams = `date=${consultaData.data}&especialidade=${consultaData.especialidade.idEsp}&medico=${searchQuery}`;
+          queryParams = `date=${consultaData.data}&especialidade=${consultaData.idEsp}&medico=${searchQuery}`;
           break;
         default:
           setError("Operação de pesquisa inválida");
@@ -66,22 +50,25 @@ const ConsultaOperations = () => {
         `http://localhost:8080/${endpoint}?${queryParams}`,
         {
           method: "GET",
-          mode: "no-cors",
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
 
-      const data = await response.json();
+      console.log("Response object:", response);
 
       if (!response.ok) {
-        setError(data.message || "Algo deu errado");
+        const errorData = await response.json();
+        console.log("Error data:", errorData);
+        setError(errorData.message || "Algo deu errado");
       } else {
+        const data = await response.json();
+        console.log("Data received:", data);
         navigate("/consulta", { state: { consultaData: data } });
       }
     } catch (erro) {
-      console.log(erro);
+      console.log("Fetch error:", erro);
       setError("Erro no servidor");
     }
   };
@@ -92,18 +79,44 @@ const ConsultaOperations = () => {
     const method = operation === "create" ? "POST" : "PUT";
     const func = operation === "create" ? "/create" : "/update";
 
-    // Filtra dados vazios
-    const filteredData = Object.fromEntries(
-      Object.entries(consultaData).filter(([_, v]) => v !== "")
-    );
+    const combineDateAndTime = (date, time) => {
+      return `${date}T${time}:00Z`; // Formato ISO 8601
+    };
+
+    const createConsultaRequest = {
+      nomePaciente: consultaData.nomePaciente,
+      telefonePaciente: consultaData.telefonePaciente,
+      date: consultaData.data,
+      crm: consultaData.crm,
+      idEsp: consultaData.idEsp,
+      horaInicioCon: combineDateAndTime(
+        consultaData.data,
+        consultaData.horaInicCon
+      ),
+    };
+
+    const updateConsultaRequest = {
+      idConsulta: consultaData.idCon,
+      horaFimCon: combineDateAndTime(
+        consultaData.data,
+        consultaData.horaFimCon
+      ),
+      valorPago: consultaData.valorPago,
+      idDiagnostico: consultaData.diagnostico?.idDiagnostico,
+      formaPagamento: consultaData.formaPagamento,
+      pagou: consultaData.pagou,
+    };
+
+    const requestBody =
+      method === "POST" ? createConsultaRequest : updateConsultaRequest;
 
     try {
-      const response = await fetch(`http://localhost:8080/${endpoint + func}`, {
+      const response = await fetch(`http://localhost:8080/${endpoint}`, {
         method: method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(filteredData),
+        body: JSON.stringify(requestBody),
       });
 
       const data = await response.json();
@@ -117,32 +130,16 @@ const ConsultaOperations = () => {
           } com sucesso`
         );
         setConsultaData({
-          idCon: "",
-          medico: {
-            crm: "",
-            nomeMedico: "",
-            telefoneMedico: "",
-            percentual: "",
-          },
-          especialidade: {
-            idEsp: "",
-            nomeEsp: "",
-            indice: "",
-          },
-          paciente: {
-            idPac: "",
-            cpf: "",
-            nomePac: "",
-            telefonePac: "",
-            endereco: "",
-            idade: "",
-            sexo: "",
-          },
+          idCon: null,
+          nomePaciente: "",
+          telefonePaciente: "",
           data: "",
+          crm: null,
+          idEsp: null,
           horaInicCon: "",
           horaFimCon: "",
           pagou: false,
-          valorPago: "",
+          valorPago: null,
           formaPagamento: "",
           diagnostico: null,
         });
@@ -203,20 +200,15 @@ const ConsultaOperations = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="consultaData.especialidade.idEsp">
-                Especialidade:
-              </label>
+              <label htmlFor="consultaData.idEsp">Especialidade:</label>
               <input
                 type="text"
-                id="consultaData.especialidade.idEsp"
-                value={consultaData.especialidade.idEsp}
+                id="consultaData.idEsp"
+                value={consultaData.idEsp}
                 onChange={(e) =>
                   setConsultaData({
                     ...consultaData,
-                    especialidade: {
-                      ...consultaData.especialidade,
-                      idEsp: e.target.value,
-                    },
+                    idEsp: e.target.value,
                   })
                 }
                 required
@@ -244,18 +236,15 @@ const ConsultaOperations = () => {
         return (
           <form onSubmit={handleCreateOrUpdate} className="form">
             <div className="form-group">
-              <label htmlFor="nomePac">Nome do Paciente:</label>
+              <label htmlFor="nomePaciente">Nome do Paciente:</label>
               <input
                 type="text"
-                id="nomePac"
-                value={consultaData.paciente.nomePac}
+                id="nomePaciente"
+                value={consultaData.nomePaciente}
                 onChange={(e) =>
                   setConsultaData({
                     ...consultaData,
-                    paciente: {
-                      ...consultaData.paciente,
-                      nomePac: e.target.value,
-                    },
+                    nomePaciente: e.target.value,
                   })
                 }
                 required
@@ -263,18 +252,15 @@ const ConsultaOperations = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="telefonePac">Telefone do Paciente:</label>
+              <label htmlFor="telefonePaciente">Telefone do Paciente:</label>
               <input
                 type="text"
-                id="telefonePac"
-                value={consultaData.paciente.telefonePac}
+                id="telefonePaciente"
+                value={consultaData.telefonePaciente}
                 onChange={(e) =>
                   setConsultaData({
                     ...consultaData,
-                    paciente: {
-                      ...consultaData.paciente,
-                      telefonePac: e.target.value,
-                    },
+                    telefonePaciente: e.target.value,
                   })
                 }
                 required
@@ -299,11 +285,11 @@ const ConsultaOperations = () => {
               <input
                 type="text"
                 id="crm"
-                value={consultaData.medico.crm}
+                value={consultaData.crm}
                 onChange={(e) =>
                   setConsultaData({
                     ...consultaData,
-                    medico: { ...consultaData.medico, crm: e.target.value },
+                    crm: e.target.value,
                   })
                 }
                 required
@@ -315,14 +301,11 @@ const ConsultaOperations = () => {
               <input
                 type="text"
                 id="idEsp"
-                value={consultaData.especialidade.idEsp}
+                value={consultaData.idEsp}
                 onChange={(e) =>
                   setConsultaData({
                     ...consultaData,
-                    especialidade: {
-                      ...consultaData.especialidade,
-                      idEsp: e.target.value,
-                    },
+                    idEsp: e.target.value,
                   })
                 }
                 required
@@ -332,7 +315,7 @@ const ConsultaOperations = () => {
             <div className="form-group">
               <label htmlFor="horaInicCon">Hora de Início:</label>
               <input
-                type="text"
+                type="time"
                 id="horaInicCon"
                 value={consultaData.horaInicCon}
                 onChange={(e) =>
@@ -345,78 +328,85 @@ const ConsultaOperations = () => {
                 className="form-input"
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="idCon">ID da Consulta:</label>
-              <input
-                type="text"
-                id="idCon"
-                value={consultaData.idCon}
-                onChange={(e) =>
-                  setConsultaData({
-                    ...consultaData,
-                    idCon: e.target.value,
-                  })
-                }
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="horaFimCon">Hora de Fim:</label>
-              <input
-                type="text"
-                id="horaFimCon"
-                value={consultaData.horaFimCon}
-                onChange={(e) =>
-                  setConsultaData({
-                    ...consultaData,
-                    horaFimCon: e.target.value,
-                  })
-                }
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="pagou">Pagou:</label>
-              <input
-                type="checkbox"
-                id="pagou"
-                checked={consultaData.pagou}
-                onChange={(e) =>
-                  setConsultaData({ ...consultaData, pagou: e.target.checked })
-                }
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="valorPago">Valor Pago:</label>
-              <input
-                type="text"
-                id="valorPago"
-                value={consultaData.valorPago}
-                onChange={(e) =>
-                  setConsultaData({
-                    ...consultaData,
-                    valorPago: e.target.value,
-                  })
-                }
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="formaPagamento">Forma de Pagamento:</label>
-              <input
-                type="text"
-                id="formaPagamento"
-                value={consultaData.formaPagamento}
-                onChange={(e) =>
-                  setConsultaData({
-                    ...consultaData,
-                    formaPagamento: e.target.value,
-                  })
-                }
-                className="form-input"
-              />
-            </div>
+            {operation === "update" && (
+              <>
+                <div className="form-group">
+                  <label htmlFor="idCon">ID da Consulta:</label>
+                  <input
+                    type="text"
+                    id="idCon"
+                    value={consultaData.idCon}
+                    onChange={(e) =>
+                      setConsultaData({
+                        ...consultaData,
+                        idCon: e.target.value,
+                      })
+                    }
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="horaFimCon">Hora de Fim:</label>
+                  <input
+                    type="time"
+                    id="horaFimCon"
+                    value={consultaData.horaFimCon}
+                    onChange={(e) =>
+                      setConsultaData({
+                        ...consultaData,
+                        horaFimCon: e.target.value,
+                      })
+                    }
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="pagou">Pagou:</label>
+                  <input
+                    type="checkbox"
+                    id="pagou"
+                    checked={consultaData.pagou}
+                    onChange={(e) =>
+                      setConsultaData({
+                        ...consultaData,
+                        pagou: e.target.checked,
+                      })
+                    }
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="valorPago">Valor Pago:</label>
+                  <input
+                    type="text"
+                    id="valorPago"
+                    value={consultaData.valorPago}
+                    onChange={(e) =>
+                      setConsultaData({
+                        ...consultaData,
+                        valorPago: e.target.value,
+                      })
+                    }
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="formaPagamento">Forma de Pagamento:</label>
+                  <input
+                    type="text"
+                    id="formaPagamento"
+                    value={consultaData.formaPagamento}
+                    onChange={(e) =>
+                      setConsultaData({
+                        ...consultaData,
+                        formaPagamento: e.target.value,
+                      })
+                    }
+                    className="form-input"
+                  />
+                </div>
+              </>
+            )}
             <button type="submit" className="btn-submit">
               {operation === "create" ? "Criar" : "Atualizar"} Consulta
             </button>

@@ -6,6 +6,7 @@ const Especialidade = () => {
   const location = useLocation();
   const { especialidadeData } = location.state || {};
 
+  // Verifica se especialidadeData existe e é um array com dados válidos
   if (!Array.isArray(especialidadeData) || especialidadeData.length === 0) {
     return <div className="container">Nenhum dado disponível.</div>;
   }
@@ -18,15 +19,15 @@ const Especialidade = () => {
           <div key={index} className="diagnostico-item">
             <div className="diagnostico-detail">
               <label>ID da Especialidade:</label>
-              <p>{especialidade.IdEsp}</p>
+              <p>{especialidade.idEsp}</p>
             </div>
             <div className="diagnostico-detail">
               <label>Nome:</label>
-              <p>{especialidade.NomeE}</p>
+              <p>{especialidade.nomeEsp}</p>
             </div>
             <div className="diagnostico-detail">
               <label>Índice:</label>
-              <p>{especialidade.Indice}</p>
+              <p>{especialidade.indice}</p>
             </div>
           </div>
         ))}
