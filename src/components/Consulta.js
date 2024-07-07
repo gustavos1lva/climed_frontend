@@ -1,14 +1,20 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./CommonStyles.css"; // Importa o arquivo de estilos comuns
 
 const Consulta = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { consultaData } = location.state || {};
 
   if (!Array.isArray(consultaData) || consultaData.length === 0) {
     return <div className="container">Nenhum dado disponível.</div>;
   }
+
+  const handleBack = () => {
+    navigate("/pesquisar-consulta");
+  };
+
 
   return (
     <div className="container">
@@ -107,6 +113,9 @@ const Consulta = () => {
           </div>
         ))}
       </div>
+      <button onClick={handleBack} className="btn-submit btn-voltar">
+        Voltar
+      </button>
     </div>
   );
 };
